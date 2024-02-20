@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.mybatis.dao.UserMapper">
+
+    <select id="getAllDataList" resultType="com.example.mybatis.dto.UserDto">
+        SELECT * FROM user;
+    </select>
+
+    <select id="getDataListIf" resultType="com.example.mybatis.dto.UserDto">
+        SELECT *
+        FROM user u
+        WHERE u.a = 1;
+    </select>
+
+<!--    ${} : 파라미터가 바로 출력된다. ''가 붙어서 나오게하고 싶다면 #{}를 사용해야 한다.-->
+    <select id="getDataListIfWhat" resultType="com.example.mybatis.dto.UserDto">
+        SELECT *
+        FROM user u
+        WHERE u.a = ${a};
+    </select>
+
+<!--    #{} : 파라미터가 String 형태로 들어와 자동적으로 쿼리 주입을 예방한다.-->
+    <select id="getDataListForeach" resultType="com.example.mybatis.dto.UserDto">
+        SELECT *
+        FROM user u
+        WHERE u.a IN
+        <foreach collection="aArray" item="item" open="(" close=")" separator=",">
+        #{item}
+        </foreach>;
+    </select>
+
+    <select id="getDataListForeachUnionAll" resultType="com.example.mybatis.dto.UserDto">
+        select *
+        FROM (
+        <foreach collection="aUserList" item="item" index="index" separator="UNION ALL ">
+            SELECT
+            ${item.name},
+            ${item.a},
+            ${item.b},
+            ${item.c}
+            FROM dual
+        </foreach>
+        ) f;
+    </select>
+
+
+<!--    <foreach collection="List or Array" item="alias" ></foreach>-->
+<!--    collection : 전달받은 인자. List or Array 형태만 가능-->
+<!--    item : 전달받은 인자 값을 alias 명으로 대체-->
+<!--    open : 구문이 시작될때 삽입할 문자열-->
+<!--    close : 구문이 종료될때 삽입할 문자열-->
+<!--    separator : 반복 되는 사이에 출력할 문자열-->
+<!--    index : 반복되는 구문 번호이다. 0부터 순차적으로 증가-->
+
+</mapper>
